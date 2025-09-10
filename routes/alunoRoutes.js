@@ -7,7 +7,9 @@ const matriculaController = require('../controllers/matriculaController');
 const transferenciaController = require('../controllers/transferenciaController');
 const declaracaoController = require('../controllers/declaracaoController'); 
 const termoController = require('../controllers/termoController'); 
-const uploadController = require('../controllers/uploadController'); 
+const upload = require('../middlewares/upload');
+const uploadController = require('../controllers/uploadController');
+
 
 // 📌 Aluno
 router.post('/alunos', alunoController.criarAluno);
@@ -38,9 +40,8 @@ router.post('/termos', termoController.criarTermo);
 router.get('/termos', termoController.listarTermos);
 
 // 📌 Upload de documentos
-router.post('/upload', uploadController.enviarDocumento);
-
-
+router.post('/upload', upload.single('documento'), uploadController.enviarDocumento);
+router.delete('/upload/:id', uploadController.deletarDocumento);
 
 
 

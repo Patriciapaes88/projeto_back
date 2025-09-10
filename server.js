@@ -1,45 +1,41 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const usuarioRoutes = require('./routes/usuarioRoutes');
-const db = require('./config/db'); // conexão com MySQL
-dotenv.config();
 const alunoRoutes = require('./routes/alunoRoutes');
-
-
-
-
 const verificarPermissao = require('./middlewares/verificarPermissao');
 const { definirPermissoesUsuario } = require('./controllers/usuarioController');
+const db = require('./config/db'); // conexão com MySQL
 
+dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // Rotas
 app.use('/api/usuario', usuarioRoutes);
 app.use('/api/aluno', alunoRoutes);
-
-
-// Nova rota protegida
 app.post('/teste/:id', verificarPermissao('gerenciar_permissoes'), definirPermissoesUsuario);
 
+// Rota de teste
+app.get('/api/ping', (req, res) => {
+  res.json({ message: 'API está funcionando!' });
+});
 
-
-//conexao com banco
+// Conexão com banco e inicialização do servidor
 db.query('SELECT 1')
   .then(() => {
     console.log('Conectado ao banco de dados MySQL');
-    app.listen(4000, () => {
-      console.log('Servidor rodando na porta 4000');
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT}`);
     });
   })
   .catch((err) => {
     console.error('Erro ao conectar com o banco de dados:', err);
     process.exit(1);
   });
-
-
 
 
 

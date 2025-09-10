@@ -1,22 +1,37 @@
 const db = require('../config/db');
 
 const Transferencia = {
-  criar: (dados, callback) => {
+  criar: async (dados) => {
     const sql = `
       INSERT INTO transferencias (
-        aluno_id, motivo, data_solicitacao, status
+        aluno_id, motivo, data_transferencia, nova_instituicao
       ) VALUES (?, ?, ?, ?)
     `;
-    const valores = [dados.aluno_id, dados.motivo, dados.data_solicitacao, dados.status];
-    db.query(sql, valores, callback);
+    const valores = [
+      dados.aluno_id,
+      dados.motivo,
+      dados.data_transferencia,
+      dados.nova_instituicao
+    ];
+
+    console.log('📦 Executando query com valores:', valores);
+
+    // ✅ Aqui está o ponto certo para usar db.execute
+    const [resultado] = await db.execute(sql, valores);
+
+    console.log('✅ Transferência inserida com sucesso:', resultado);
+
+    return resultado;
   },
 
-  listarTodas: (callback) => {
-    db.query('SELECT * FROM transferencias', callback);
+  listarTodas: async () => {
+    const [rows] = await db.execute('SELECT * FROM transferencias');
+    return rows;
   },
 
-  buscarPorId: (id, callback) => {
-    db.query('SELECT * FROM transferencias WHERE id = ?', [id], callback);
+  buscarPorId: async (id) => {
+    const [rows] = await db.execute('SELECT * FROM transferencias WHERE id = ?', [id]);
+    return rows[0];
   }
 };
 
