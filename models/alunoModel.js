@@ -80,7 +80,75 @@ const Aluno = {
   deletar: async (id) => {
     const [resultado] = await db.query('DELETE FROM alunos WHERE id = ?', [id]);
     return resultado;
-  }
+  },
+  
+  /*  Método para listar alunos com filtros e paginação
+    Pode filtrar por nome, turma e status (se existirem no banco)
+  Também retorna total de registros para controle de páginas
+    Exemplo de uso: GET /api/aluno?nome=ana&turma=3A&page=2&limit=5
+   */
+  listarComFiltros: async ({ nome, turma, status, limit, offset }) => {
+    let sql = 'SELECT * FROM alunos WHERE 1=1';
+    let countSql = 'SELECT COUNT(*) as total FROM alunos WHERE 1=1';
+    const params = [];
+    const countParams = [];
+
+    if (nome) {
+      sql += ' AND nome LIKE ?';
+      countSql += ' AND nome LIKE ?';
+      params.push(`%${nome}%`);
+      countParams.push(`%${nome}%`);
+    }
+
+    if (turma) {
+      sql += ' AND turma = ?';
+      countSql += ' AND turma = ?';
+      params.push(turma);
+      countParams.push(turma);
+    }
+
+    if (status) {
+      sql += ' AND status = ?';
+      countSql += ' AND status = ?';
+      params.push(status);
+      countParams.push(status);
+    }
+
+    sql += ' ORDER BY nome ASC LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const [alunos] = await db.query(sql, params);
+    const [[{ total }]] = await db.query(countSql, countParams);
+
+    return { alunos, total };
+  },
+consultaDetalhada: async (id) => {
+  const sql = `
+    SELECT 
+      a.id AS alunoId,
+      a.nome,
+      a.cpf,
+      a.rg,
+      a.nascimento,
+      m.id AS matriculaId,
+      m.data_matricula,
+      m.turno,
+      m.tipo_matricula,
+      m.responsavel,
+      m.observacoes
+    FROM alunos a
+    LEFT JOIN matriculas m ON a.id = m.aluno_id
+    WHERE a.id = ?
+  `;
+  const [rows] = await db.query(sql, [id]);
+  return rows;
+}
+
+
 };
+
+
+
+
 
 module.exports = Aluno;

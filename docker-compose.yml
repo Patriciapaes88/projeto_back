@@ -9,6 +9,7 @@ services:
       - .:/app
     depends_on:
       - db
+    
     env_file:
       - .env
     environment:
@@ -34,6 +35,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     restart: always
+ 
 
 volumes:
   dbdata:

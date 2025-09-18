@@ -9,10 +9,13 @@ const db = require('./config/db'); // conexão com MySQL
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
-
+const { swaggerUi, specs } = require('./config/swagger');
 // Middleware
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Rotas
 app.use('/api/usuario', usuarioRoutes);
