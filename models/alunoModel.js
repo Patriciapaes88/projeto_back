@@ -87,41 +87,74 @@ const Aluno = {
   Também retorna total de registros para controle de páginas
     Exemplo de uso: GET /api/aluno?nome=ana&turma=3A&page=2&limit=5
    */
-  listarComFiltros: async ({ nome, turma, status, limit, offset }) => {
-    let sql = 'SELECT * FROM alunos WHERE 1=1';
-    let countSql = 'SELECT COUNT(*) as total FROM alunos WHERE 1=1';
-    const params = [];
-    const countParams = [];
+listarComFiltros: async ({ nome, turma, status, limit, offset }) => {
+  let sql = 'SELECT * FROM alunos WHERE 1=1';
+  let countSql = 'SELECT COUNT(*) as total FROM alunos WHERE 1=1';
+  const params = [];
+  const countParams = [];
 
-    if (nome) {
-      sql += ' AND nome LIKE ?';
-      countSql += ' AND nome LIKE ?';
-      params.push(`%${nome}%`);
-      countParams.push(`%${nome}%`);
-    }
+  // Filtro por nome, ignorando se for "todos"
+  if (nome && nome.toLowerCase() !== 'todos') {
+    sql += ' AND nome LIKE ?';
+    countSql += ' AND nome LIKE ?';
+    params.push(`%${nome}%`);
+    countParams.push(`%${nome}%`);
+  }
 
-    if (turma) {
-      sql += ' AND turma = ?';
-      countSql += ' AND turma = ?';
-      params.push(turma);
-      countParams.push(turma);
-    }
+  // Filtro por turma
+  if (turma) {
+    sql += ' AND turma = ?';
+    countSql += ' AND turma = ?';
+    params.push(turma);
+    countParams.push(turma);
+  }
 
-    if (status) {
-      sql += ' AND status = ?';
-      countSql += ' AND status = ?';
-      params.push(status);
-      countParams.push(status);
-    }
+  // Filtros simulados por status
+  if (status === 'alergico') {
+    sql += ' AND alergias IS NOT NULL AND alergias != ""';
+    countSql += ' AND alergias IS NOT NULL AND alergias != ""';
+  }
 
+  if (status === 'matriculado') {
+    sql += ' AND EXISTS (SELECT 1 FROM matriculas WHERE aluno_id = alunos.id)';
+    countSql += ' AND EXISTS (SELECT 1 FROM matriculas WHERE aluno_id = alunos.id)';
+  }
+
+  if (status === 'desistente') {
+    sql += ' AND observacoes LIKE "%desistente%"';
+    countSql += ' AND observacoes LIKE "%desistente%"';
+  }
+
+  if (status === 'ativo') {
+    sql += ` AND EXISTS (
+      SELECT 1 FROM matriculas m 
+      WHERE m.aluno_id = alunos.id AND m.ano_letivo = YEAR(CURDATE())
+    )`;
+    countSql += ` AND EXISTS (
+      SELECT 1 FROM matriculas m 
+      WHERE m.aluno_id = alunos.id AND m.ano_letivo = YEAR(CURDATE())
+    )`;
+  }
+
+  if (status === 'transferido') {
+    sql += ' AND observacoes LIKE "%transferido%"';
+    countSql += ' AND observacoes LIKE "%transferido%"';
+  }
+
+  // Paginação (opcional)
+  if (limit && offset !== null) {
     sql += ' ORDER BY nome ASC LIMIT ? OFFSET ?';
     params.push(limit, offset);
+  } else {
+    sql += ' ORDER BY nome ASC';
+  }
 
-    const [alunos] = await db.query(sql, params);
-    const [[{ total }]] = await db.query(countSql, countParams);
+  const [alunos] = await db.query(sql, params);
+  const [[{ total }]] = await db.query(countSql, countParams);
 
-    return { alunos, total };
-  },
+  return { alunos, total };
+},
+
 consultaDetalhada: async (id) => {
   const sql = `
     SELECT 

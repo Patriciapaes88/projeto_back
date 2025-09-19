@@ -46,43 +46,77 @@ const uploadController = require('../controllers/uploadController');
  *               nascimento:
  *                 type: string
  *                 format: date
+ *               certidao_nascimento:
+ *                 type: string
+ *               nis:
+ *                 type: string
+ *               bolsa_familia:
+ *                 type: boolean
+ *               alergias:
+ *                 type: string
+ *               deficiencia:
+ *                 type: string
+ *               sexo:
+ *                 type: string
+ *               cor_raca:
+ *                 type: string
+ *               nacionalidade:
+ *                 type: string
+ *               naturalidade:
+ *                 type: string
+ *               endereco:
+ *                 type: string
+ *               telefone:
+ *                 type: string
+ *               nome_social:
+ *                 type: string
+ *               nome_afetivo:
+ *                 type: string
+ *               filiacao_pai:
+ *                 type: string
+ *               filiacao_mae:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Aluno cadastrado com sucesso
  */
+
 router.post('/alunos', alunoController.criarAluno);
 /**
  * @swagger
  * /api/aluno/alunos:
  *   get:
- *     summary: Lista alunos com filtros e paginação
+ *     summary: Lista alunos com filtros obrigatórios
  *     tags: [Alunos]
  *     parameters:
  *       - in: query
  *         name: nome
+ *         required: true
  *         schema:
  *           type: string
+ *         description: Nome do aluno ou todos. Obrigatório.
+ *       - in: query
+ *         name: status
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [alergico,  matriculado, desistente, ativo, tranferido]
+ *         description: Categoria simulada para filtrar alunos. Obrigatório.
  *       - in: query
  *         name: turma
  *         schema:
  *           type: string
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
+ *         description: Turma do aluno (opcional)
  *     responses:
  *       200:
- *         description: Lista paginada de alunos
+ *         description: Lista de alunos filtrada
+ *       400:
+ *         description: Campos obrigatórios ausentes
  */
 router.get('/alunos', alunoController.listarAlunos);
+
+router.get('/alunos', alunoController.listarAlunos);
+
 /**
  * @swagger
  * /api/aluno/alunos/{id}:
