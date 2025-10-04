@@ -11,10 +11,42 @@ exports.criarAluno = async (req, res) => {
   }
 };
 
-exports.listarAlunos = async (req, res) => {
+exports.consultaDetalhada = async (req, res) => {
+  const id = req.params.id;
   try {
-    const resultados = await Aluno.listarTodos();
-    res.status(200).json(resultados);
+    const resultado = await Aluno.consultaDetalhada(id);
+    if (resultado.length === 0) {
+      return res.status(404).json({ mensagem: 'Aluno não encontrado ou sem dados relacionados' });
+    }
+    res.status(200).json(resultado);
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+};
+exports.listarAlunos = async (req, res) => {
+  // Recebe os filtros e paginação via query string
+  const { nome, turma, status, page = 1, limit = 10 } = req.query;
+
+  // Calcula o deslocamento (offset) para a página atual
+  const offset = (parseInt(page) - 1) * parseInt(limit);
+
+  try {
+    // Chama o model com os filtros e paginação
+    const resultados = await Aluno.listarComFiltros({
+      nome,
+      turma,
+      status,
+      limit: parseInt(limit),
+      offset,
+    });
+
+    // Retorna os dados paginados e filtrados
+    res.status(200).json({
+      total: resultados.total,
+      paginaAtual: parseInt(page),
+      totalPaginas: Math.ceil(resultados.total / limit),
+      alunos: resultados.alunos,
+    });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }
