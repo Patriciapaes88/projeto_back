@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 // Controllers
-const alunoController = require('../controllers/alunoController');
-const matriculaController = require('../controllers/matriculaController');
-const transferenciaController = require('../controllers/transferenciaController');
-const declaracaoController = require('../controllers/declaracaoController'); 
-const termoController = require('../controllers/termoController'); 
-const upload = require('../middlewares/upload');
-const uploadController = require('../controllers/uploadController');
+const alunoController = require("../controllers/alunoController");
+const matriculaController = require("../controllers/matriculaController");
+const transferenciaController = require("../controllers/transferenciaController");
+const declaracaoController = require("../controllers/declaracaoController");
+const termoController = require("../controllers/termoController");
+const upload = require("../middlewares/upload");
+const uploadController = require("../controllers/uploadController");
 
 /**
  * @swagger
@@ -20,7 +20,6 @@ const uploadController = require('../controllers/uploadController');
  *   - name: Termos
  *   - name: Upload
  */
-
 
 // 📌 Aluno
 
@@ -81,7 +80,7 @@ const uploadController = require('../controllers/uploadController');
  *         description: Aluno cadastrado com sucesso
  */
 
-router.post('/alunos', alunoController.criarAluno);
+router.post("/alunos", alunoController.criarAluno);
 /**
  * @swagger
  * /api/aluno/alunos:
@@ -113,9 +112,9 @@ router.post('/alunos', alunoController.criarAluno);
  *       400:
  *         description: Campos obrigatórios ausentes
  */
-router.get('/alunos', alunoController.listarAlunos);
+router.get("/alunos", alunoController.listarAlunos);
 
-router.get('/alunos', alunoController.listarAlunos);
+router.get("/alunos", alunoController.listarAlunos);
 
 /**
  * @swagger
@@ -135,7 +134,7 @@ router.get('/alunos', alunoController.listarAlunos);
  *       404:
  *         description: Aluno não encontrado
  */
-router.get('/alunos/:id', alunoController.buscarAlunoPorId);
+router.get("/alunos/:id", alunoController.buscarAlunoPorId);
 /**
  * @swagger
  * /api/aluno/alunos/{id}:
@@ -165,7 +164,7 @@ router.get('/alunos/:id', alunoController.buscarAlunoPorId);
  *       404:
  *         description: Aluno não encontrado
  */
-router.put('/alunos/:id', alunoController.atualizarAluno);   // Atualiza aluno por ID
+router.put("/alunos/:id", alunoController.atualizarAluno); // Atualiza aluno por ID
 /**
  * @swagger
  * /api/aluno/alunos/{id}:
@@ -184,8 +183,30 @@ router.put('/alunos/:id', alunoController.atualizarAluno);   // Atualiza aluno p
  *       404:
  *         description: Aluno não encontrado
  */
-router.delete('/alunos/:id', alunoController.deletarAluno);   // Deleta aluno por ID
+router.delete("/alunos/:id", alunoController.deletarAluno); // Deleta aluno por ID
 
+/**
+ * @swagger
+ * /api/aluno/buscar-id:
+ *   get:
+ *     summary: Busca alunos pelo nome (autocomplete)
+ *     tags: [Alunos]
+ *     parameters:
+ *       - in: query
+ *         name: nome
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Parte do nome do aluno para busca
+ *     responses:
+ *       200:
+ *         description: Lista de alunos encontrados
+ *       400:
+ *         description: Nome muito curto
+ *       404:
+ *         description: Nenhum aluno encontrado
+ */
+router.get("/buscar-id", alunoController.buscarIdPorNome);
 
 // 📌 Matrícula
 /**
@@ -211,7 +232,7 @@ router.delete('/alunos/:id', alunoController.deletarAluno);   // Deleta aluno po
  *       201:
  *         description: Matrícula criada com sucesso
  */
-router.post('/matricula', matriculaController.criarMatricula);
+router.post("/matricula", matriculaController.criarMatricula);
 /**
  * @swagger
  * /api/aluno/matricula:
@@ -222,7 +243,7 @@ router.post('/matricula', matriculaController.criarMatricula);
  *       200:
  *         description: Lista de matrículas
  */
-router.get('/matricula', matriculaController.listarMatriculas);
+router.get("/matricula", matriculaController.listarMatriculas);
 /**
  * @swagger
  * /api/aluno/matricula/{id}:
@@ -241,7 +262,7 @@ router.get('/matricula', matriculaController.listarMatriculas);
  *       404:
  *         description: Matrícula não encontrada
  */
-router.get('/matricula/:id', matriculaController.buscarMatriculaPorId);
+router.get("/matricula/:id", matriculaController.buscarMatriculaPorId);
 /**
  * @swagger
  * /api/aluno/matricula/{id}:
@@ -269,7 +290,7 @@ router.get('/matricula/:id', matriculaController.buscarMatriculaPorId);
  *       200:
  *         description: Matrícula atualizada com sucesso
  */
-router.put('/matricula/:id', matriculaController.atualizarMatricula);
+router.put("/matricula/:id", matriculaController.atualizarMatricula);
 /**
  * @swagger
  * /api/aluno/matricula/{id}:
@@ -286,7 +307,7 @@ router.put('/matricula/:id', matriculaController.atualizarMatricula);
  *       200:
  *         description: Matrícula deletada com sucesso
  */
-router.delete('/matricula/:id', matriculaController.deletarMatricula);
+router.delete("/matricula/:id", matriculaController.deletarMatricula);
 
 // 📌 Transferência
 
@@ -313,7 +334,7 @@ router.delete('/matricula/:id', matriculaController.deletarMatricula);
  *       201:
  *         description: Transferência registrada com sucesso
  */
-router.post('/transferencia', transferenciaController.criarTransferencia);
+router.post("/transferencia", transferenciaController.criarTransferencia);
 /**
  * @swagger
  * /api/aluno/transferencia:
@@ -324,7 +345,7 @@ router.post('/transferencia', transferenciaController.criarTransferencia);
  *       200:
  *         description: Lista de transferências
  */
-router.get('/transferencia', transferenciaController.listarTransferencias);
+router.get("/transferencia", transferenciaController.listarTransferencias);
 /**
  * @swagger
  * /api/aluno/transferencia/{id}:
@@ -343,7 +364,10 @@ router.get('/transferencia', transferenciaController.listarTransferencias);
  *       404:
  *         description: Transferência não encontrada
  */
-router.get('/transferencia/:id', transferenciaController.buscarTransferenciaPorId);
+router.get(
+  "/transferencia/:id",
+  transferenciaController.buscarTransferenciaPorId
+);
 
 // 📌 Declarações
 /**
@@ -367,7 +391,7 @@ router.get('/transferencia/:id', transferenciaController.buscarTransferenciaPorI
  *       201:
  *         description: Declaração gerada com sucesso
  */
-router.post('/declaracoes', declaracaoController.criarDeclaracao);
+router.post("/declaracoes", declaracaoController.criarDeclaracao);
 /**
  * @swagger
  * /api/aluno/declaracoes:
@@ -378,7 +402,7 @@ router.post('/declaracoes', declaracaoController.criarDeclaracao);
  *       200:
  *         description: Lista de declarações
  */
-router.get('/declaracoes', declaracaoController.listarDeclaracoes);
+router.get("/declaracoes", declaracaoController.listarDeclaracoes);
 
 // 📌 Termos
 
@@ -406,7 +430,7 @@ router.get('/declaracoes', declaracaoController.listarDeclaracoes);
  *       201:
  *         description: Termo gerado com sucesso
  */
-router.post('/termos', termoController.criarTermo);
+router.post("/termos", termoController.criarTermo);
 
 /**
  * @swagger
@@ -418,7 +442,7 @@ router.post('/termos', termoController.criarTermo);
  *       200:
  *         description: Lista de termos
  */
-router.get('/termos', termoController.listarTermos);
+router.get("/termos", termoController.listarTermos);
 // 📌 Upload de documentos
 /**
  * @swagger
@@ -441,7 +465,11 @@ router.get('/termos', termoController.listarTermos);
  *         description: Documento enviado com sucesso
  */
 
-router.post('/upload', upload.single('documento'), uploadController.enviarDocumento);
+router.post(
+  "/upload",
+  upload.single("documento"),
+  uploadController.enviarDocumento
+);
 /**
  * @swagger
  * /api/aluno/upload/{id}:
@@ -462,7 +490,7 @@ router.post('/upload', upload.single('documento'), uploadController.enviarDocume
  *         description: Documento não encontrado
  */
 
-router.delete('/upload/:id', uploadController.deletarDocumento);
+router.delete("/upload/:id", uploadController.deletarDocumento);
 
 //consulta detalhada do aluno//
 /**
@@ -484,8 +512,6 @@ router.delete('/upload/:id', uploadController.deletarDocumento);
  *         description: Aluno não encontrado
  */
 
- 
-router.get('/alunos/:id/detalhado', alunoController.consultaDetalhada);
-
+router.get("/alunos/:id/detalhado", alunoController.consultaDetalhada);
 
 module.exports = router;
