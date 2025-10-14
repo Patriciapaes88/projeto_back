@@ -7,6 +7,8 @@ module.exports = {
       email: { type: Sequelize.STRING(100), unique: true },
       senha: { type: Sequelize.STRING(255) },
       cargo: { type: Sequelize.STRING(50), allowNull: false },
+      cpf: { type: Sequelize.STRING(14), unique: true },         // novo campo
+      telefone: { type: Sequelize.STRING(20) }, // novo campo
       resetToken: { type: Sequelize.STRING(255) },
       resetTokenExpira: { type: Sequelize.DATE },
       token_recuperacao: { type: Sequelize.STRING(64) },

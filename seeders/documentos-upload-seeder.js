@@ -4,12 +4,10 @@ module.exports = {
     await queryInterface.bulkDelete('documentos_upload', null, {});
     await queryInterface.bulkInsert('documentos_upload', [
       {
-        id: 1,
         aluno_id: 1,
         nome_arquivo: 'cpf.pdf',
-        caminho: '/uploads/cpf.pdf',
-        tipo: 'pdf',
-        criado_em: new Date(),
+        caminho_arquivo: '/uploads/cpf.pdf',
+        data_upload: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       }

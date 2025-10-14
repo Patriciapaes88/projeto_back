@@ -26,7 +26,7 @@ exports.enviarDocumento = async (req, res) => {
       nome_arquivo: req.file.filename
     });
   } catch (err) {
-    console.error('❌ Erro ao salvar documento:', err);
+    console.error(' Erro ao salvar documento:', err);
     res.status(500).json({ erro: err.message });
   }
 };
@@ -47,7 +47,7 @@ exports.deletarDocumento = async (req, res) => {
 
     res.status(200).json({ mensagem: 'Documento apagado com sucesso!' });
   } catch (err) {
-    console.error('❌ Erro ao apagar documento:', err);
+    console.error(' Erro ao apagar documento:', err);
     res.status(500).json({ erro: err.message });
   }
 };

@@ -3,10 +3,15 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('transferencias', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-      aluno_id: { type: Sequelize.INTEGER, allowNull: false },
-      escola_origem: { type: Sequelize.STRING(255), allowNull: false },
-      escola_destino: { type: Sequelize.STRING(255), allowNull: false },
-      status: { type: Sequelize.STRING(50), allowNull: false },
+      aluno_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'alunos', key: 'id' },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      },
+      motivo: { type: Sequelize.STRING(255), allowNull: false },
+      nova_instituicao: { type: Sequelize.STRING(255), allowNull: false },
       data_transferencia: { type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') },
       createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') },
       updatedAt: { type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') }

@@ -2,6 +2,7 @@
 
 const Aluno = require("../models/alunoModel");
 
+
 exports.criarAluno = async (req, res) => {
   try {
     const resultado = await Aluno.criar(req.body);
@@ -30,7 +31,8 @@ exports.consultaDetalhada = async (req, res) => {
 };
 exports.listarAlunos = async (req, res) => {
   // Recebe os filtros e paginação via query string
-  const { nome, turma, status, page = 1, limit = 10 } = req.query;
+  const { nome, turma, status, turno, page = 1, limit = 10 } = req.query;
+
 
   // Calcula o deslocamento (offset) para a página atual
   const offset = (parseInt(page) - 1) * parseInt(limit);
@@ -121,3 +123,5 @@ exports.buscarIdPorNome = async (req, res) => {
     res.status(500).json({ erro: err.message });
   }
 };
+
+

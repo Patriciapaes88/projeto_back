@@ -1,32 +1,32 @@
 'use strict';
 module.exports = {
-  async up (queryInterface) {
+  async up(queryInterface) {
     await queryInterface.bulkDelete('permissoes', null, {});
     await queryInterface.bulkInsert('permissoes', [
       {
-        id: 1,
         usuario_id: 3,
-        tipo: 'diretor',
+        recurso: 'gerenciar_alunos',
+        permitido: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        id: 2,
         usuario_id: 4,
-        tipo: 'diretor_adjunto',
+        recurso: 'visualizar_relatorios',
+        permitido: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        id: 3,
         usuario_id: 5,
-        tipo: 'secretaria',
+        recurso: 'editar_documentos',
+        permitido: false,
         createdAt: new Date(),
         updatedAt: new Date()
       }
     ], {});
   },
-  async down (queryInterface) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete('permissoes', null, {});
   }
 };

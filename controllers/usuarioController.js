@@ -50,7 +50,7 @@ const permissoesPorCargo = {
 };
 
 exports.cadastrarUsuario = async (req, res) => {
-  const { usuario, senha, email, cargo, permissoes } = req.body;
+  const { usuario, senha, email, cargo, cpf, telefone, permissoes } = req.body;
 
   // Verifica se o usuário logado é diretor ou diretor adjunto
   if (
@@ -64,7 +64,7 @@ exports.cadastrarUsuario = async (req, res) => {
   }
 
   // Validação de campos obrigatórios
-  if (!usuario || !senha || !email || !cargo) {
+  if (!usuario || !senha || !email || !cargo  || !cpf || !telefone) {
     return res
       .status(400)
       .json({ mensagem: "Preencha usuario, senha, email e cargo!" });
@@ -84,13 +84,20 @@ exports.cadastrarUsuario = async (req, res) => {
     if (usuarioExistente.length > 0) {
       return res.status(400).json({ mensagem: "Usuário já existe!" });
     }
-
     const [emailExistente] = await db.query(
       "SELECT * FROM usuarios WHERE email = ?",
       [email]
     );
     if (emailExistente.length > 0) {
       return res.status(400).json({ mensagem: "Email já cadastrado!" });
+    }
+    // Verifica se CPF já existe
+    const [cpfExistente] = await db.query(
+      "SELECT * FROM usuarios WHERE cpf = ?",
+      [cpf]
+    );
+    if (cpfExistente.length > 0) {
+      return res.status(400).json({ mensagem: "CPF já cadastrado!" });
     }
 
     // Criptografa a senha

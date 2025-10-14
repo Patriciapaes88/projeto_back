@@ -14,12 +14,12 @@ const Transferencia = {
       dados.nova_instituicao
     ];
 
-    console.log('📦 Executando query com valores:', valores);
+    console.log('Executando query com valores:', valores);
 
-    // ✅ Aqui está o ponto certo para usar db.execute
+    //  Aqui está o ponto certo para usar db.execute
     const [resultado] = await db.execute(sql, valores);
 
-    console.log('✅ Transferência inserida com sucesso:', resultado);
+    console.log('Transferência inserida com sucesso:', resultado);
 
     return resultado;
   },

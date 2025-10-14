@@ -104,7 +104,7 @@ const Aluno = {
   Também retorna total de registros para controle de páginas
     Exemplo de uso: GET /api/aluno?nome=ana&turma=3A&page=2&limit=5
    */
-  listarComFiltros: async ({ nome, turma, status, limit, offset }) => {
+  listarComFiltros: async ({ nome, turma, status, limit,turno, offset }) => {
     let sql = "SELECT * FROM alunos WHERE 1=1";
     let countSql = "SELECT COUNT(*) as total FROM alunos WHERE 1=1";
     const params = [];
@@ -125,6 +125,14 @@ const Aluno = {
       params.push(turma);
       countParams.push(turma);
     }
+    // Filtro por turno
+if (turno) {
+  sql += " AND turno = ?";
+  countSql += " AND turno = ?";
+  params.push(turno);
+  countParams.push(turno);
+}
+
 
     // Filtros simulados por status
     if (status === "alergico") {

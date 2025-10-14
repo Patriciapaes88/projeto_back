@@ -14,14 +14,14 @@ const Declaracao = {
       dados.data_emissao
     ];
 
-    console.log('📦 Executando INSERT de declaração:', valores);
+    console.log(' Executando INSERT de declaração:', valores);
 
     const [resultado] = await db.execute(sql, valores);
     return resultado;
   },
 
   listarTodas: async () => {
-    console.log('📤 Executando SELECT de todas as declarações');
+    console.log(' Executando SELECT de todas as declarações');
     const [rows] = await db.execute('SELECT * FROM declaracoes');
     return rows;
   }

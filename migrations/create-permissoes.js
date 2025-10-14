@@ -14,9 +14,14 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      tipo: {
-        type: Sequelize.STRING(50),
+      recurso: {
+        type: Sequelize.STRING(100),
         allowNull: false
+      },
+      permitido: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       createdAt: {
         type: Sequelize.DATE,

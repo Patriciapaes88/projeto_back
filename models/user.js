@@ -11,6 +11,11 @@ module.exports = (sequelize) => {
     cargo: {
       type: DataTypes.ENUM('direcao', 'secretaria')
     },
+     cpf: {
+    type: DataTypes.STRING,
+    unique: true
+  },
+    telefone: DataTypes.STRING,
     resetToken: DataTypes.STRING,
     resetTokenExpira: DataTypes.DATE
   }, {

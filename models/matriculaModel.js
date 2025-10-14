@@ -14,7 +14,7 @@ const Matricula = {
       dados.observacoes
     ];
     const [resultado] = await db.query(sql, valores);
-    console.log('✅ INSERT realizado com sucesso:', resultado);
+    console.log(' INSERT realizado com sucesso:', resultado);
     return resultado;
   },
 
@@ -41,7 +41,7 @@ const Matricula = {
       dados.observacoes, id
     ];
     const [resultado] = await db.query(sql, valores);
-    console.log('📥 Atualização realizada com sucesso:', resultado);
+    console.log(' Atualização realizada com sucesso:', resultado);
     return resultado;
   },
 

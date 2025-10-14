@@ -2,8 +2,8 @@
 const Matricula = require('../models/matriculaModel');
 
 exports.criarMatricula = async (req, res) => {
-  console.log('➡️ Requisição recebida em /api/aluno/matricula');
-  console.log('📦 Dados recebidos:', req.body);
+  console.log('Requisição recebida em /api/aluno/matricula');
+  console.log(' Dados recebidos:', req.body);
 
   const { aluno_id, turma_id } = req.body;
 
@@ -11,12 +11,12 @@ exports.criarMatricula = async (req, res) => {
     const resultado = await Matricula.buscarPorAlunoETurma(aluno_id, turma_id);
 
     if (resultado.length > 0) {
-      console.log('⚠️ Matrícula já existe para aluno e turma');
+      console.log('Matrícula já existe para aluno e turma');
       return res.status(400).json({ mensagem: 'Aluno já matriculado nessa turma.' });
     }
 
     const novaMatricula = await Matricula.criar(req.body);
-    console.log('✅ Matrícula criada com sucesso:', novaMatricula.insertId);
+    console.log(' Matrícula criada com sucesso:', novaMatricula.insertId);
 
     res.status(201).json({
       mensagem: 'Matrícula realizada com sucesso!',
@@ -24,7 +24,7 @@ exports.criarMatricula = async (req, res) => {
     });
 
   } catch (err) {
-    console.error('❌ Erro ao criar matrícula:', err);
+    console.error(' Erro ao criar matrícula:', err);
     res.status(500).json({ erro: err.message });
   }
 };
@@ -76,3 +76,4 @@ exports.deletarMatricula = async (req, res) => {
     res.status(500).json({ erro: err.message });
   }
 };
+

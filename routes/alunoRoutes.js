@@ -10,24 +10,20 @@ const termoController = require("../controllers/termoController");
 const upload = require("../middlewares/upload");
 const uploadController = require("../controllers/uploadController");
 
+
+
+//  Aluno
 /**
  * @swagger
  * tags:
  *   - name: Alunos
- *   - name: Matrícula
- *   - name: Transferência
- *   - name: Declarações
- *   - name: Termos
- *   - name: Upload
  */
-
-// 📌 Aluno
 
 /**
  * @swagger
  * /api/aluno/alunos:
  *   post:
- *     summary: Cadastra um novo aluno
+ *     summary: "Cadastra um novo aluno"
  *     tags: [Alunos]
  *     requestBody:
  *       required: true
@@ -35,6 +31,12 @@ const uploadController = require("../controllers/uploadController");
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nome
+ *               - cpf
+ *               - nascimento
+ *               - sexo
+ *               - endereco
  *             properties:
  *               nome:
  *                 type: string
@@ -77,50 +79,53 @@ const uploadController = require("../controllers/uploadController");
  *                 type: string
  *     responses:
  *       201:
- *         description: Aluno cadastrado com sucesso
+ *         description: "Aluno cadastrado com sucesso"
  */
 
-router.post("/alunos", alunoController.criarAluno);
 /**
  * @swagger
  * /api/aluno/alunos:
  *   get:
- *     summary: Lista alunos com filtros obrigatórios
- *     tags: [Alunos]
+ *     summary: "Lista alunos com filtros obrigatórios"
+ *     tags:
+ *       - "Alunos"
  *     parameters:
  *       - in: query
  *         name: nome
  *         required: true
  *         schema:
  *           type: string
- *         description: Nome do aluno ou todos. Obrigatório.
+ *         description: "Nome do aluno ou 'todos'. Obrigatório."
  *       - in: query
  *         name: status
  *         required: true
  *         schema:
  *           type: string
- *           enum: [alergico,  matriculado, desistente, ativo, tranferido]
- *         description: Categoria simulada para filtrar alunos. Obrigatório.
+ *           enum: [alergico, matriculado, desistente, ativo, transferido]
+ *         description: "Categoria simulada para filtrar alunos. Obrigatório."
  *       - in: query
  *         name: turma
+ *         required: false
  *         schema:
  *           type: string
- *         description: Turma do aluno (opcional)
+ *         description: "Turma do aluno (opcional)"
+ *       - in: query
+ *         name: turno
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: "Turno da turma (ex: 'Manhã', 'Tarde', 'Noite', 'Integral')"
  *     responses:
  *       200:
- *         description: Lista de alunos filtrada
+ *         description: "Lista de alunos filtrada"
  *       400:
- *         description: Campos obrigatórios ausentes
+ *         description: "Campos obrigatórios ausentes"
  */
-router.get("/alunos", alunoController.listarAlunos);
-
-router.get("/alunos", alunoController.listarAlunos);
-
 /**
  * @swagger
  * /api/aluno/alunos/{id}:
  *   get:
- *     summary: Busca aluno por ID
+ *     summary: "Busca aluno por ID"
  *     tags: [Alunos]
  *     parameters:
  *       - in: path
@@ -130,16 +135,16 @@ router.get("/alunos", alunoController.listarAlunos);
  *           type: integer
  *     responses:
  *       200:
- *         description: Dados do aluno
+ *         description: "Dados do aluno"
  *       404:
- *         description: Aluno não encontrado
+ *         description: "Aluno não encontrado"
  */
-router.get("/alunos/:id", alunoController.buscarAlunoPorId);
+
 /**
  * @swagger
  * /api/aluno/alunos/{id}:
  *   put:
- *     summary: Atualiza dados do aluno
+ *     summary: "Atualiza dados do aluno"
  *     tags: [Alunos]
  *     parameters:
  *       - in: path
@@ -160,16 +165,16 @@ router.get("/alunos/:id", alunoController.buscarAlunoPorId);
  *                 type: string
  *     responses:
  *       200:
- *         description: Aluno atualizado com sucesso
+ *         description: "Aluno atualizado com sucesso"
  *       404:
- *         description: Aluno não encontrado
+ *         description: "Aluno não encontrado"
  */
-router.put("/alunos/:id", alunoController.atualizarAluno); // Atualiza aluno por ID
+
 /**
  * @swagger
  * /api/aluno/alunos/{id}:
  *   delete:
- *     summary: Deleta aluno por ID
+ *     summary: "Deleta aluno por ID"
  *     tags: [Alunos]
  *     parameters:
  *       - in: path
@@ -179,17 +184,16 @@ router.put("/alunos/:id", alunoController.atualizarAluno); // Atualiza aluno por
  *           type: integer
  *     responses:
  *       200:
- *         description: Aluno deletado com sucesso
+ *         description: "Aluno deletado com sucesso"
  *       404:
- *         description: Aluno não encontrado
+ *         description: "Aluno não encontrado"
  */
-router.delete("/alunos/:id", alunoController.deletarAluno); // Deleta aluno por ID
 
 /**
  * @swagger
  * /api/aluno/buscar-id:
  *   get:
- *     summary: Busca alunos pelo nome (autocomplete)
+ *     summary: "Busca alunos pelo nome (autocomplete)"
  *     tags: [Alunos]
  *     parameters:
  *       - in: query
@@ -197,23 +201,35 @@ router.delete("/alunos/:id", alunoController.deletarAluno); // Deleta aluno por 
  *         required: true
  *         schema:
  *           type: string
- *         description: Parte do nome do aluno para busca
+ *         description: "Parte do nome do aluno para busca"
  *     responses:
  *       200:
- *         description: Lista de alunos encontrados
+ *         description: "Lista de alunos encontrados"
  *       400:
- *         description: Nome muito curto
+ *         description: "Nome muito curto"
  *       404:
- *         description: Nenhum aluno encontrado
+ *         description: "Nenhum aluno encontrado"
  */
+router.post("/alunos", alunoController.criarAluno);
+router.get("/alunos", alunoController.listarAlunos);
+router.get("/alunos/:id", alunoController.buscarAlunoPorId);
+router.put("/alunos/:id", alunoController.atualizarAluno);
+router.delete("/alunos/:id", alunoController.deletarAluno);
 router.get("/buscar-id", alunoController.buscarIdPorNome);
 
-// 📌 Matrícula
+
+//  Matrícula
+/**
+ * @swagger
+ * tags:
+ *   - name: Matrícula
+ */
+
 /**
  * @swagger
  * /api/aluno/matricula:
  *   post:
- *     summary: Cadastra uma nova matrícula
+ *     summary: "Cadastra uma nova matrícula"
  *     tags: [Matrícula]
  *     requestBody:
  *       required: true
@@ -221,34 +237,60 @@ router.get("/buscar-id", alunoController.buscarIdPorNome);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - aluno_id
+ *               - turma_id
+ *               - data_matricula
+ *               - turno
+ *               - tipo_matricula
+ *               - responsavel
  *             properties:
- *               alunoId:
+ *               aluno_id:
  *                 type: integer
- *               turma:
+ *                 description: "ID do aluno"
+ *               turma_id:
+ *                 type: integer
+ *                 description: "ID da turma"
+ *               data_matricula:
  *                 type: string
- *               anoLetivo:
+ *                 format: date-time
+ *                 description: "Data da matrícula"
+ *               turno:
  *                 type: string
+ *                 description: "Turno da matrícula (ex: manhã, tarde)"
+ *               tipo_matricula:
+ *                 type: string
+ *                 description: "Tipo da matrícula (ex: nova, rematrícula)"
+ *               responsavel:
+ *                 type: string
+ *                 description: "Nome do responsável pela matrícula"
+ *               documentos_entregues:
+ *                 type: boolean
+ *                 description: "Indica se os documentos foram entregues"
+ *               observacoes:
+ *                 type: string
+ *                 description: "Observações adicionais"
  *     responses:
  *       201:
- *         description: Matrícula criada com sucesso
+ *         description: "Matrícula criada com sucesso"
  */
-router.post("/matricula", matriculaController.criarMatricula);
+
 /**
  * @swagger
  * /api/aluno/matricula:
  *   get:
- *     summary: Lista todas as matrículas
+ *     summary: "Lista todas as matrículas"
  *     tags: [Matrícula]
  *     responses:
  *       200:
- *         description: Lista de matrículas
+ *         description: "Lista de matrículas"
  */
-router.get("/matricula", matriculaController.listarMatriculas);
+
 /**
  * @swagger
  * /api/aluno/matricula/{id}:
  *   get:
- *     summary: Busca matrícula por ID
+ *     summary: "Busca matrícula por ID"
  *     tags: [Matrícula]
  *     parameters:
  *       - in: path
@@ -258,16 +300,16 @@ router.get("/matricula", matriculaController.listarMatriculas);
  *           type: integer
  *     responses:
  *       200:
- *         description: Dados da matrícula
+ *         description: "Dados da matrícula"
  *       404:
- *         description: Matrícula não encontrada
+ *         description: "Matrícula não encontrada"
  */
-router.get("/matricula/:id", matriculaController.buscarMatriculaPorId);
+
 /**
  * @swagger
  * /api/aluno/matricula/{id}:
  *   put:
- *     summary: Atualiza matrícula
+ *     summary: "Atualiza matrícula"
  *     tags: [Matrícula]
  *     parameters:
  *       - in: path
@@ -284,18 +326,20 @@ router.get("/matricula/:id", matriculaController.buscarMatriculaPorId);
  *             properties:
  *               turma:
  *                 type: string
+ *                 description: "Nova turma do aluno"
  *               anoLetivo:
  *                 type: string
+ *                 description: "Ano letivo da matrícula"
  *     responses:
  *       200:
- *         description: Matrícula atualizada com sucesso
+ *         description: "Matrícula atualizada com sucesso"
  */
-router.put("/matricula/:id", matriculaController.atualizarMatricula);
+
 /**
  * @swagger
  * /api/aluno/matricula/{id}:
  *   delete:
- *     summary: Deleta matrícula por ID
+ *     summary: "Deleta matrícula por ID"
  *     tags: [Matrícula]
  *     parameters:
  *       - in: path
@@ -305,17 +349,26 @@ router.put("/matricula/:id", matriculaController.atualizarMatricula);
  *           type: integer
  *     responses:
  *       200:
- *         description: Matrícula deletada com sucesso
+ *         description: "Matrícula deletada com sucesso"
  */
+router.post("/matricula", matriculaController.criarMatricula);
+router.get("/matricula", matriculaController.listarMatriculas);
+router.get("/matricula/:id", matriculaController.buscarMatriculaPorId);
+router.put("/matricula/:id", matriculaController.atualizarMatricula);
 router.delete("/matricula/:id", matriculaController.deletarMatricula);
 
-// 📌 Transferência
+//  Transferência
+/**
+ * @swagger
+ * tags:
+ *   - name: Transferência
+ */
 
 /**
  * @swagger
  * /api/aluno/transferencia:
  *   post:
- *     summary: Registra uma transferência de aluno
+ *     summary: "Registra uma transferência de aluno"
  *     tags: [Transferência]
  *     requestBody:
  *       required: true
@@ -323,34 +376,45 @@ router.delete("/matricula/:id", matriculaController.deletarMatricula);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - aluno_id
+ *               - motivo
+ *               - nova_instituicao
  *             properties:
- *               alunoId:
+ *               aluno_id:
  *                 type: integer
- *               destino:
- *                 type: string
+ *                 description: "ID do aluno transferido"
  *               motivo:
  *                 type: string
+ *                 description: "Motivo da transferência"
+ *               nova_instituicao:
+ *                 type: string
+ *                 description: "Nome da nova instituição"
+ *               data_transferencia:
+ *                 type: string
+ *                 format: date-time
+ *                 description: "Data da transferência"
  *     responses:
  *       201:
- *         description: Transferência registrada com sucesso
+ *         description: "Transferência registrada com sucesso"
  */
-router.post("/transferencia", transferenciaController.criarTransferencia);
+
 /**
  * @swagger
  * /api/aluno/transferencia:
  *   get:
- *     summary: Lista todas as transferências
+ *     summary: "Lista todas as transferências"
  *     tags: [Transferência]
  *     responses:
  *       200:
- *         description: Lista de transferências
+ *         description: "Lista de transferências"
  */
-router.get("/transferencia", transferenciaController.listarTransferencias);
+
 /**
  * @swagger
  * /api/aluno/transferencia/{id}:
  *   get:
- *     summary: Busca transferência por ID
+ *     summary: "Busca transferência por ID"
  *     tags: [Transferência]
  *     parameters:
  *       - in: path
@@ -360,21 +424,29 @@ router.get("/transferencia", transferenciaController.listarTransferencias);
  *           type: integer
  *     responses:
  *       200:
- *         description: Dados da transferência
+ *         description: "Dados da transferência"
  *       404:
- *         description: Transferência não encontrada
+ *         description: "Transferência não encontrada"
  */
+router.post("/transferencia", transferenciaController.criarTransferencia);
+router.get("/transferencia", transferenciaController.listarTransferencias);
 router.get(
   "/transferencia/:id",
   transferenciaController.buscarTransferenciaPorId
 );
 
-// 📌 Declarações
+//  Declarações
+/**
+ * @swagger
+ * tags:
+ *   - name: Declarações
+ */
+
 /**
  * @swagger
  * /api/aluno/declaracoes:
  *   post:
- *     summary: Gera uma nova declaração
+ *     summary: "Gera uma nova declaração"
  *     tags: [Declarações]
  *     requestBody:
  *       required: true
@@ -382,35 +454,54 @@ router.get(
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - aluno_id
+ *               - tipo
+ *               - conteudo
  *             properties:
- *               alunoId:
+ *               aluno_id:
  *                 type: integer
+ *                 description: "ID do aluno"
  *               tipo:
  *                 type: string
- *   responses:
+ *                 description: "Tipo da declaração (ex: escolar, conclusão)"
+ *               conteudo:
+ *                 type: string
+ *                 description: "Texto da declaração"
+ *               data_emissao:
+ *                 type: string
+ *                 format: date-time
+ *                 description: "Data de emissão da declaração"
+ *     responses:
  *       201:
- *         description: Declaração gerada com sucesso
+ *         description: "Declaração gerada com sucesso"
  */
-router.post("/declaracoes", declaracaoController.criarDeclaracao);
+
 /**
  * @swagger
  * /api/aluno/declaracoes:
  *   get:
- *     summary: Lista todas as declarações geradas
+ *     summary: "Lista todas as declarações geradas"
  *     tags: [Declarações]
  *     responses:
  *       200:
- *         description: Lista de declarações
+ *         description: "Lista de declarações"
  */
+router.post("/declaracoes", declaracaoController.criarDeclaracao);
 router.get("/declaracoes", declaracaoController.listarDeclaracoes);
+//  Termos
 
-// 📌 Termos
+/**
+ * @swagger
+ * tags:
+ *   - name: Termos
+ */
 
 /**
  * @swagger
  * /api/aluno/termos:
  *   post:
- *     summary: Gera um novo termo para o aluno
+ *     summary: "Gera um novo termo para o aluno"
  *     tags: [Termos]
  *     requestBody:
  *       required: true
@@ -419,36 +510,53 @@ router.get("/declaracoes", declaracaoController.listarDeclaracoes);
  *           schema:
  *             type: object
  *             required:
- *               - alunoId
+ *               - aluno_id
  *               - tipo
+ *               - descricao
  *             properties:
- *               alunoId:
+ *               aluno_id:
  *                 type: integer
+ *                 description: "ID do aluno"
  *               tipo:
  *                 type: string
+ *                 description: "Tipo do termo (ex: compromisso, ciência)"
+ *               descricao:
+ *                 type: string
+ *                 description: "Conteúdo do termo"
+ *               data_assinatura:
+ *                 type: string
+ *                 format: date-time
+ *                 description: "Data da assinatura"
  *     responses:
  *       201:
- *         description: Termo gerado com sucesso
+ *         description: "Termo gerado com sucesso"
  */
-router.post("/termos", termoController.criarTermo);
 
 /**
  * @swagger
  * /api/aluno/termos:
  *   get:
- *     summary: Lista todos os termos gerados
+ *     summary: "Lista todos os termos gerados"
  *     tags: [Termos]
  *     responses:
  *       200:
- *         description: Lista de termos
+ *         description: "Lista de termos"
  */
+router.post("/termos", termoController.criarTermo);
 router.get("/termos", termoController.listarTermos);
-// 📌 Upload de documentos
+
+//  Upload de documentos
+/**
+ * @swagger
+ * tags:
+ *   - name: Upload
+ */
+
 /**
  * @swagger
  * /api/aluno/upload:
  *   post:
- *     summary: Envia um documento para o aluno
+ *     summary: "Envia um documento para o aluno"
  *     tags: [Upload]
  *     requestBody:
  *       required: true
@@ -456,25 +564,27 @@ router.get("/termos", termoController.listarTermos);
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - documento
+ *               - aluno_id
  *             properties:
  *               documento:
  *                 type: string
  *                 format: binary
+ *                 description: "Arquivo a ser enviado"
+ *               aluno_id:
+ *                 type: integer
+ *                 description: "ID do aluno relacionado ao documento"
  *     responses:
  *       201:
- *         description: Documento enviado com sucesso
+ *         description: "Documento enviado com sucesso"
  */
 
-router.post(
-  "/upload",
-  upload.single("documento"),
-  uploadController.enviarDocumento
-);
 /**
  * @swagger
  * /api/aluno/upload/{id}:
  *   delete:
- *     summary: Deleta um documento enviado
+ *     summary: "Deleta um documento enviado"
  *     tags: [Upload]
  *     parameters:
  *       - in: path
@@ -482,13 +592,14 @@ router.post(
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do documento
+ *         description: "ID do documento"
  *     responses:
  *       200:
- *         description: Documento deletado com sucesso
+ *         description: "Documento deletado com sucesso"
  *       404:
- *         description: Documento não encontrado
+ *         description: "Documento não encontrado"
  */
+router.post("/upload", upload.single("documento"), uploadController.enviarDocumento);
 
 router.delete("/upload/:id", uploadController.deletarDocumento);
 
@@ -497,21 +608,30 @@ router.delete("/upload/:id", uploadController.deletarDocumento);
  * @swagger
  * /api/aluno/alunos/{id}/detalhado:
  *   get:
- *     summary: Consulta detalhada do aluno com dados relacionados
- *     tags: [Alunos]
+ *     summary: "Consulta detalhada do aluno com dados relacionados"
+ *     tags:
+ *       - "Alunos"
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Dados completos do aluno
- *       404:
- *         description: Aluno não encontrado
+ *       - in: "path"
+ *         name: "id"
+*         required: true
+*         schema:
+*           type: "integer"
+*         description: "ID do aluno"
+*     responses:
+*       200:
+*         description: "Dados completos do aluno"
+*       404:
+*         description: "Aluno não encontrado"
  */
+
+
 
 router.get("/alunos/:id/detalhado", alunoController.consultaDetalhada);
 
+
+
+
 module.exports = router;
+
+

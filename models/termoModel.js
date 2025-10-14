@@ -14,14 +14,14 @@ const Termo = {
       dados.data_assinatura
     ];
 
-    console.log('📦 Executando INSERT de termo:', valores);
+    console.log('Executando INSERT de termo:', valores);
 
     const [resultado] = await db.execute(sql, valores);
     return resultado;
   },
 
   listarTodas: async () => {
-    console.log('📤 Executando SELECT de todos os termos');
+    console.log(' Executando SELECT de todos os termos');
     const [rows] = await db.execute('SELECT * FROM termos');
     return rows;
   }
